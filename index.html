@@ -3,200 +3,291 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Music Video Collection</title>
-    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>USAF Framework: Monetary System as Neural Network</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
     <style>
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            overflow: hidden; /* Prevent scrollbars */
+            background-color: #f0f0f0;
         }
-        .folder-button {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.75rem 1rem;
-            background-color: #f3f4f6; /* Tailwind's gray-200 */
-            color: #1f2937; /* Tailwind's gray-800 */
-            cursor: pointer;
-            border-radius: 0.375rem; /* Tailwind's rounded-md */
-            margin-bottom: 0.25rem; /* Tailwind's mb-1 */
-            width: 100%;
-            text-align: left;
-            font-weight: 500; /* Tailwind's font-medium */
-            border: 1px solid #e5e7eb; /* Tailwind's border-gray-200 */
-        }
-        .folder-button:hover {
-            background-color: #d1d5db; /* Tailwind's gray-300 */
-        }
-        .folder-button.open {
-            background-color: #e5e7eb; /* Tailwind's gray-200 */
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 0;
-        }
-        .folder-content {
-            padding: 0.75rem 1rem;
-            background-color: #ffffff; /* Tailwind's bg-white */
-            border-radius: 0.375rem; /* Tailwind's rounded-md */
-            margin-bottom: 0.25rem; /* Tailwind's mb-1 */
-            border: 1px solid #e5e7eb; /* Tailwind's border-gray-200 */
-            border-top: none;
-            display: none;
-        }
-        .folder-content.open {
+        svg {
             display: block;
+            background-color: #FFFFFF; /* White background */
+            border: 1px solid #ccc;
+            box-sizing: border-box;
         }
-        .video-container {
-            margin-bottom: 0.75rem; /* Tailwind's mb-3 */
-            border-radius: 0.375rem; /* Tailwind's rounded-md */
-            overflow: hidden;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1); /* Tailwind's shadow-sm */
+        .node text {
+            pointer-events: none; /* Allow clicks to pass through text to node */
+            text-anchor: middle;
+            font-size: 12px;
+            fill: white;
+            stroke: black;
+            stroke-width: 2px;
+            paint-order: stroke; /* Draw stroke under fill */
         }
-        .video-container iframe {
-            width: 100%;
-            height: 315px; /* Default height, adjust as needed */
-        }
-        .arrow {
-            width: 0.75rem; /* Tailwind's w-6 */
-            height: 0.75rem; /* Tailwind's h-6 */
-            border-top: 0.125rem solid #1f2937; /* Tailwind's border-gray-800 */
-            border-right: 0.125rem solid #1f2937; /* Tailwind's border-gray-800 */
-            transform: rotate(135deg);
-            transition: transform 0.2s ease-in-out;
-        }
-        .arrow.open {
-            transform: rotate(315deg);
+        .legend text {
+             font-size: 10px;
+             fill: #333;
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-start justify-center py-8">
-    <div class="max-w-3xl w-full px-4">
-        <h1 class="text-2xl font-semibold text-gray-800 mb-6 text-center">My Favorite Music Videos</h1>
-        <div id="music-folders">
-            </div>
-    </div>
+<body>
 
-    <script>
-        const musicData = [
-            {
-                category: "Rock",
-                videos: [
-                    { title: "Queen - Bohemian Rhapsody", url: "https://www.youtube.com/watch?v=_FrOQC-zEog" },
-                    { title: "Led Zeppelin - Stairway to Heaven", url: "https://www.youtube.com/embed/QkF3oxziq-A" },
-                    { title: "Nirvana - Smells Like Teen Spirit", url: "https://www.youtube.com/embed/hTWKbfoikeg" },
-                ]
-            },
-            {
-                category: "Pop",
-                videos: [
-                    { title: "Michael Jackson - Thriller", url: "https://www.youtube.com/embed/sZIgUc9oo7w" },
-                    { title: "Madonna - Like a Prayer", url: "https://www.youtube.com/embed/79fzeNUccfg" },
-                    { title: "Taylor Swift - Shake It Off", url: "https://www.youtube.com/watch?v=d73tiBBzvFM" },
-                ]
-            },
-            {
-                category: "Hip Hop",
-                videos: [
-                    { title: "The Notorious B.I.G. - Juicy", url: "https://www.youtube.com/embed/hyNcKzhol7Y" },
-                    { title: "Missy Elliott - Get Ur Freak On", url: "https://www.youtube.com/embed/WLx5E8b-p8E" },
-                    { title: "Kanye West - Stronger", url: "https://www.youtube.com/embed/K8e1kxYQk0Y" },
-                ]
-            },
-             {
-                category: "Classical",
-                videos: [
-                    { title: "Beethoven - Für Elise", url: "https://www.youtube.com/watch?v=Rb0UmrCXxVA" },
-                    { title: "Mozart - Lacrimosa", url: "https://www.youtube.com/embed/k1-TrAvuP_8" },
-                    { title: "Vivaldi - Four Seasons", url: "https://www.youtube.com/embed/GRxofPeUv8U" },
-                ]
-            },
-            {
-                category: "Jazz",
-                videos: [
-                    { title: "Louis Armstrong - What a Wonderful World", url: "https://www.youtube.com/embed/Vqh5oWj2KZA" },
-                    { title: "Ella Fitzgerald - Fly Me to the Moon", url: "https://www.youtube.com/embed/79fzeNUccfg" },
-                    { title: "Miles Davis - So What", url: "https://www.youtube.com/embed/DEC8nqT6Rlo" },
-                ]
-            },
-            {
-                category: "Country",
-                videos: [
-                    { title: "Johnny Cash - Ring of Fire", url: "https://www.youtube.com/embed/6Q1a_7CfU4k" },
-                    { title: "Dolly Parton - Jolene", url: "https://www.youtube.com/embed/I197pD-Fnbw" },
-                    { title: "Garth Brooks - Friends in Low Places", url: "https://www.youtube.com/embed/j4n9ymSoZ3I" },
-                ]
-            },
-            {
-                category: "Electronic",
-                videos: [
-                    { title: "Daft Punk - Around the World", url: "https://www.youtube.com/embed/s9MszVE7aR4" },
-                    { title: "Calvin Harris - Feel So Close", url: "https://www.youtube.com/embed/dGghkjp9ePc" },
-                    { title: "Skrillex - First of the Year (Equinox)", url: "https://www.youtube.com/embed/2cXDgFwE13g" },
-                ]
-            },
-            {
-                category: "Reggae",
-                videos: [
-                    { title: "Bob Marley - No Woman, No Cry", url: "https://www.youtube.com/embed/j9jMzc5jGjU" },
-                    { title: "Toots and the Maytals - Pressure Drop", url: "https://www.youtube.com/embed/6mmd8oX7W1Y" },
-                    { title: "Jimmy Cliff - The Harder They Come", url: "https://www.youtube.com/embed/0cMb7lYfM6o" },
-                ]
-            },
-            {
-                category: "Folk",
-                videos: [
-                    { title: "Bob Dylan - Like a Rolling Stone", url: "https://www.youtube.com/embed/P6JvS_v-U1E" },
-                    { title: "Joni Mitchell - Big Yellow Taxi", url: "https://www.youtube.com/embed/94bdn0x995o" },
-                    { title: "Simon & Garfunkel - The Sound of Silence", url: "https://www.youtube.com/embed/4fWjWGf4Z5Y" },
-                ]
-            },
-            {
-                category: "Blues",
-                videos: [
-                    { title: "B.B. King - The Thrill Is Gone", url: "https://www.youtube.com/embed/3EKaxfIDv-Q" },
-                    { title: "Muddy Waters - Hoochie Coochie Man", url: "https://www.youtube.com/embed/B_4Wt6fJv_c" },
-                    { title: "Etta James - At Last", url: "https://www.youtube.com/embed/S-cbOl9iBcM" },
-                ]
-            }
-        ];
+<svg id="network-svg"></svg>
 
-        const musicFoldersDiv = document.getElementById('music-folders');
+<script>
+    // Define the nodes and edges data based on the user's prompt
+    const nodesData = [
+        { id: "N1", label: "Monetary System Design", score: 100, level: "Central", color: "#8B0000" },
+        { id: "N2", label: "Debt Imbalance", score: 99, level: "First", color: "#FFA500" },
+        { id: "N3", label: "Growth Imperative", score: 98, level: "First", color: "#FFA500" },
+        { id: "N4", label: "Wealth Extraction", score: 97, level: "First", color: "#FFA500" },
+        { id: "N5", label: "Financial Power", score: 96, level: "First", color: "#FFA500" },
+        { id: "N6", label: "Obscurantism", score: 95, level: "First", color: "#FFA500" },
+        { id: "N7", label: "Environmental Damage", score: 90, level: "Second", color: "#FFFF00" },
+        { id: "N8", label: "Systemic Inequality", score: 92, level: "Second", color: "#FFFF00" },
+        { id: "N9", label: "Financialization", score: 89, level: "Second", color: "#FFFF00" },
+        { id: "N10", label: "State Capture", score: 85, level: "Second", color: "#FFFF00" },
+        { id: "N11", label: "Debt Imperialism", score: 86, level: "Second", color: "#FFFF00" },
+        { id: "N12", label: "Psychological Distress", score: 80, level: "Third", color: "#0000FF" },
+        { id: "N13", label: "Alienation", score: 78, level: "Third", color: "#0000FF" },
+        { id: "N14", label: "Erosion of Critical Thinking", score: 75, level: "Third", color: "#0000FF" },
+        { id: "N15", label: "Conspiracy Theories", score: 70, level: "Third", color: "#0000FF" },
+        { id: "N16", label: "Resistance & Alternatives", score: 65, level: "Third", color: "#0000FF" }
+    ];
 
-        musicData.forEach(categoryData => {
-            const folderButton = document.createElement('button');
-            folderButton.className = 'folder-button';
-            folderButton.textContent = categoryData.category;
+    const linksData = [
+        { source: "N1", target: "N2", score: 99 },
+        { source: "N1", target: "N3", score: 98 },
+        { source: "N1", target: "N4", score: 97 },
+        { source: "N1", target: "N5", score: 96 },
+        { source: "N1", target: "N6", score: 95 },
+        { source: "N3", target: "N7", score: 90 },
+        { source: "N2", target: "N8", score: 92 },
+        { source: "N2", target: "N9", score: 89 },
+        { source: "N5", target: "N10", score: 85 },
+        { source: "N3", target: "N11", score: 86 },
+        { source: "N2", target: "N12", score: 80 },
+        { source: "N3", target: "N13", score: 78 },
+        { source: "N6", target: "N14", score: 75 },
+        { source: "N6", target: "N15", score: 70 },
+        { source: "N8", target: "N16", score: 65 }
+    ];
 
-            const arrow = document.createElement('span');
-            arrow.className = 'arrow';
-            folderButton.appendChild(arrow);
+    // Map node IDs to node objects for easy lookup in links
+    const nodesMap = new Map(nodesData.map(node => [node.id, node]));
+    const links = linksData.map(link => ({
+        source: nodesMap.get(link.source),
+        target: nodesMap.get(link.target),
+        score: link.score
+    }));
 
-            const folderContent = document.createElement('div');
-            folderContent.className = 'folder-content';
+    // Set up the SVG container and dimensions
+    const svg = d3.select("#network-svg");
+    let width = window.innerWidth;
+    let height = window.innerHeight;
 
-            categoryData.videos.forEach(video => {
-                const videoContainer = document.createElement('div');
-                videoContainer.className = 'video-container';
-                const iframe = document.createElement('iframe');
-                iframe.src = video.url;
-                iframe.title = video.title;
-                iframe.frameBorder = '0';
-                iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-                iframe.allowFullscreen = true;
-                videoContainer.appendChild(iframe);
-                folderContent.appendChild(videoContainer);
-            });
+    // Create a group element to hold the graph content (nodes, links, labels)
+    // This group will be transformed by the zoom behavior
+    const graphGroup = svg.append("g");
 
-            musicFoldersDiv.appendChild(folderButton);
-            musicFoldersDiv.appendChild(folderContent);
+    // Function to handle zoom and pan
+    function zoomed({transform}) {
+        graphGroup.attr("transform", transform);
+    }
 
-            folderButton.addEventListener('click', () => {
-                folderButton.classList.toggle('open');
-                folderContent.classList.toggle('open');
-                arrow.classList.toggle('open');
-            });
+    // Create the zoom behavior
+    const zoom = d3.zoom()
+        .scaleExtent([0.1, 4]) // Set zoom limits (0.1x to 4x)
+        .on("zoom", zoomed); // Call the zoomed function on zoom events
+
+    // Apply the zoom behavior to the SVG
+    svg.call(zoom);
+
+    // Function to update SVG dimensions and simulation on window resize
+    function resize() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        svg.attr("width", width).attr("height", height);
+        simulation.force("center", d3.forceCenter(width / 2, height / 2));
+        simulation.alpha(0.3).restart(); // Reheat simulation
+
+        // Reapply zoom behavior on resize to update extent
+        svg.call(zoom.extent([[0, 0], [width, height]]));
+    }
+
+    // Initial size setting and add resize listener
+    svg.attr("width", width).attr("height", height);
+    window.addEventListener("resize", resize);
+
+    // Create a force simulation
+    const simulation = d3.forceSimulation(nodesData)
+        .force("link", d3.forceLink(links).id(d => d.id).distance(d => 200 - d.score * 0.5)) // Link force with distance based on score
+        .force("charge", d3.forceManyBody().strength(-1000)) // Repulsion force
+        .force("center", d3.forceCenter(width / 2, height / 2)) // Center force
+        .force("collide", d3.forceCollide().radius(d => d.score * 0.25 + 10)); // Collision force to prevent overlap
+
+    // Add arrows (markers) for directed edges
+    svg.append("defs").selectAll("marker")
+        .data(["arrow"]) // Unique identifier for the marker
+        .enter().append("marker")
+        .attr("id", d => d)
+        .attr("viewBox", "0 -5 10 10")
+        .attr("refX", 15) // Position the arrow relative to the end of the line
+        .attr("refY", 0)
+        .attr("markerWidth", 6)
+        .attr("markerHeight", 6)
+        .attr("orient", "auto")
+        .append("path")
+        .attr("d", "M0,-5L10,0L0,5")
+        .attr("fill", "#999"); // Default arrow color
+
+    // Create the links (edges) within the graph group
+    const link = graphGroup.append("g")
+        .attr("stroke", "#999")
+        .attr("stroke-opacity", 0.6)
+        .selectAll("line")
+        .data(links)
+        .join("line")
+        .attr("stroke-width", d => d.score * 0.1) // Edge thickness based on score
+        .attr("stroke", d => d.source.color) // Edge color matches source node color
+        .attr("marker-end", "url(#arrow)"); // Attach the arrow marker
+
+    // Create the nodes within the graph group
+    const node = graphGroup.append("g")
+        .attr("stroke", "#fff")
+        .attr("stroke-width", 1.5)
+        .selectAll("circle")
+        .data(nodesData)
+        .join("circle")
+        .attr("r", d => d.score * 0.25 + 5) // Node size based on score (added an offset for smaller nodes)
+        .attr("fill", d => d.color) // Node color based on level
+        .call(drag(simulation)); // Add drag functionality
+
+    // Add labels to the nodes within the graph group
+    const labels = graphGroup.append("g")
+        .selectAll("text")
+        .data(nodesData)
+        .join("text")
+        .attr("dy", "0.35em") // Center text vertically
+        .text(d => d.label); // Display node label
+
+    // Add a title to the SVG (outside the graph group so it doesn't zoom)
+    svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", 20)
+        .attr("text-anchor", "middle")
+        .style("font-size", "16pt")
+        .style("font-weight", "bold")
+        .style("font-family", "Arial")
+        .text("USAF Framework: Monetary System as Neural Network");
+
+    // Add a legend (outside the graph group so it doesn't zoom)
+    const legend = svg.append("g")
+        .attr("class", "legend")
+        .attr("transform", `translate(${width - 150}, ${height - 150})`); // Position legend in bottom-right
+
+    // Legend title
+    legend.append("text")
+        .attr("x", 0)
+        .attr("y", 0)
+        .style("font-weight", "bold")
+        .text("Legend");
+
+    // Node color legend
+    const colorLegendData = [
+        { label: "Central", color: "#8B0000" },
+        { label: "First-Level", color: "#FFA500" },
+        { label: "Second-Level", color: "#FFFF00" },
+        { label: "Third-Level", color: "#0000FF" }
+    ];
+
+    legend.selectAll(".color-legend-item")
+        .data(colorLegendData)
+        .enter().append("g")
+        .attr("class", "color-legend-item")
+        .attr("transform", (d, i) => `translate(0, ${20 + i * 15})`)
+        .each(function(d) {
+            d3.select(this).append("rect")
+                .attr("width", 10)
+                .attr("height", 10)
+                .attr("fill", d.color);
+            d3.select(this).append("text")
+                .attr("x", 15)
+                .attr("y", 5)
+                .attr("dy", "0.35em")
+                .text(d.label);
         });
-    </script>
+
+    // Node size legend (simplified representation)
+     legend.append("text")
+        .attr("x", 0)
+        .attr("y", 20 + colorLegendData.length * 15 + 10)
+        .text("Node Size: Proportional to Activity Score (65-100)");
+
+    // Edge thickness legend (simplified representation)
+    legend.append("text")
+        .attr("x", 0)
+        .attr("y", 20 + colorLegendData.length * 15 + 25)
+        .text("Edge Thickness: Proportional to Activity Score (65-99)");
+
+     // Arrow legend
+     legend.append("text")
+        .attr("x", 0)
+        .attr("y", 20 + colorLegendData.length * 15 + 40)
+        .text("Arrows: Indicate Causal Direction");
+
+
+    // Update positions of nodes and links on each simulation tick
+    simulation.on("tick", () => {
+        link
+            .attr("x1", d => d.source.x)
+            .attr("y1", d => d.source.y)
+            .attr("x2", d => d.target.x)
+            .attr("y2", d => d.target.y);
+
+        node
+            .attr("cx", d => d.x)
+            .attr("cy", d => d.y);
+
+        labels
+            .attr("x", d => d.x)
+            .attr("y", d => d.y + (d.score * 0.25 + 5) + 5); // Position label below the node
+    });
+
+    // Drag functionality for nodes
+    function drag(simulation) {
+        function dragstarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+
+        function dragged(event, d) {
+            d.fx = event.x;
+            d.fy = event.y;
+        }
+
+        function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
+
+        return d3.drag()
+            .on("start", dragstarted)
+            .on("drag", dragged)
+            .on("end", dragended);
+    }
+
+    // Ensure the simulation starts on window load
+    window.onload = function() {
+        simulation.alpha(1).restart(); // Start the simulation
+    };
+
+</script>
+
 </body>
 </html>
