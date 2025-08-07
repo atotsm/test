@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Video Collection</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .folder-button {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            background-color: #f3f4f6; /* Tailwind's gray-200 */
+            color: #1f2937; /* Tailwind's gray-800 */
+            cursor: pointer;
+            border-radius: 0.375rem; /* Tailwind's rounded-md */
+            margin-bottom: 0.25rem; /* Tailwind's mb-1 */
+            width: 100%;
+            text-align: left;
+            font-weight: 500; /* Tailwind's font-medium */
+            border: 1px solid #e5e7eb; /* Tailwind's border-gray-200 */
+        }
+        .folder-button:hover {
+            background-color: #d1d5db; /* Tailwind's gray-300 */
+        }
+        .folder-button.open {
+            background-color: #e5e7eb; /* Tailwind's gray-200 */
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        .folder-content {
+            padding: 0.75rem 1rem;
+            background-color: #ffffff; /* Tailwind's bg-white */
+            border-radius: 0.375rem; /* Tailwind's rounded-md */
+            margin-bottom: 0.25rem; /* Tailwind's mb-1 */
+            border: 1px solid #e5e7eb; /* Tailwind's border-gray-200 */
+            border-top: none;
+            display: none;
+        }
+        .folder-content.open {
+            display: block;
+        }
+        .video-container {
+            margin-bottom: 0.75rem; /* Tailwind's mb-3 */
+            border-radius: 0.375rem; /* Tailwind's rounded-md */
+            overflow: hidden;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1); /* Tailwind's shadow-sm */
+        }
+        .video-container iframe {
+            width: 100%;
+            height: 315px; /* Default height, adjust as needed */
+        }
+        .arrow {
+            width: 0.75rem; /* Tailwind's w-6 */
+            height: 0.75rem; /* Tailwind's h-6 */
+            border-top: 0.125rem solid #1f2937; /* Tailwind's border-gray-800 */
+            border-right: 0.125rem solid #1f2937; /* Tailwind's border-gray-800 */
+            transform: rotate(135deg);
+            transition: transform 0.2s ease-in-out;
+        }
+        .arrow.open {
+            transform: rotate(315deg);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-start justify-center py-8">
+    <div class="max-w-3xl w-full px-4">
+        <h1 class="text-2xl font-semibold text-gray-800 mb-6 text-center">My Favorite Music Videos</h1>
+        <div id="music-folders">
+            </div>
+    </div>
+
+    <script>
+        const musicData = [
+            {
+                category: "Rock",
+                videos: [
+                    { title: "Queen - Bohemian Rhapsody", url: "https://www.youtube.com/watch?v=_FrOQC-zEog" },
+                    { title: "Led Zeppelin - Stairway to Heaven", url: "https://www.youtube.com/embed/QkF3oxziq-A" },
+                    { title: "Nirvana - Smells Like Teen Spirit", url: "https://www.youtube.com/embed/hTWKbfoikeg" },
+                ]
+            },
+            {
+                category: "Pop",
+                videos: [
+                    { title: "Michael Jackson - Thriller", url: "https://www.youtube.com/embed/sZIgUc9oo7w" },
+                    { title: "Madonna - Like a Prayer", url: "https://www.youtube.com/embed/79fzeNUccfg" },
+                    { title: "Taylor Swift - Shake It Off", url: "https://www.youtube.com/watch?v=d73tiBBzvFM" },
+                ]
+            },
+            {
+                category: "Hip Hop",
+                videos: [
+                    { title: "The Notorious B.I.G. - Juicy", url: "https://www.youtube.com/embed/hyNcKzhol7Y" },
+                    { title: "Missy Elliott - Get Ur Freak On", url: "https://www.youtube.com/embed/WLx5E8b-p8E" },
+                    { title: "Kanye West - Stronger", url: "https://www.youtube.com/embed/K8e1kxYQk0Y" },
+                ]
+            },
+             {
+                category: "Classical",
+                videos: [
+                    { title: "Beethoven - Für Elise", url: "https://www.youtube.com/watch?v=Rb0UmrCXxVA" },
+                    { title: "Mozart - Lacrimosa", url: "https://www.youtube.com/embed/k1-TrAvuP_8" },
+                    { title: "Vivaldi - Four Seasons", url: "https://www.youtube.com/embed/GRxofPeUv8U" },
+                ]
+            },
+            {
+                category: "Jazz",
+                videos: [
+                    { title: "Louis Armstrong - What a Wonderful World", url: "https://www.youtube.com/embed/Vqh5oWj2KZA" },
+                    { title: "Ella Fitzgerald - Fly Me to the Moon", url: "https://www.youtube.com/embed/79fzeNUccfg" },
+                    { title: "Miles Davis - So What", url: "https://www.youtube.com/embed/DEC8nqT6Rlo" },
+                ]
+            },
+            {
+                category: "Country",
+                videos: [
+                    { title: "Johnny Cash - Ring of Fire", url: "https://www.youtube.com/embed/6Q1a_7CfU4k" },
+                    { title: "Dolly Parton - Jolene", url: "https://www.youtube.com/embed/I197pD-Fnbw" },
+                    { title: "Garth Brooks - Friends in Low Places", url: "https://www.youtube.com/embed/j4n9ymSoZ3I" },
+                ]
+            },
+            {
+                category: "Electronic",
+                videos: [
+                    { title: "Daft Punk - Around the World", url: "https://www.youtube.com/embed/s9MszVE7aR4" },
+                    { title: "Calvin Harris - Feel So Close", url: "https://www.youtube.com/embed/dGghkjp9ePc" },
+                    { title: "Skrillex - First of the Year (Equinox)", url: "https://www.youtube.com/embed/2cXDgFwE13g" },
+                ]
+            },
+            {
+                category: "Reggae",
+                videos: [
+                    { title: "Bob Marley - No Woman, No Cry", url: "https://www.youtube.com/embed/j9jMzc5jGjU" },
+                    { title: "Toots and the Maytals - Pressure Drop", url: "https://www.youtube.com/embed/6mmd8oX7W1Y" },
+                    { title: "Jimmy Cliff - The Harder They Come", url: "https://www.youtube.com/embed/0cMb7lYfM6o" },
+                ]
+            },
+            {
+                category: "Folk",
+                videos: [
+                    { title: "Bob Dylan - Like a Rolling Stone", url: "https://www.youtube.com/embed/P6JvS_v-U1E" },
+                    { title: "Joni Mitchell - Big Yellow Taxi", url: "https://www.youtube.com/embed/94bdn0x995o" },
+                    { title: "Simon & Garfunkel - The Sound of Silence", url: "https://www.youtube.com/embed/4fWjWGf4Z5Y" },
+                ]
+            },
+            {
+                category: "Blues",
+                videos: [
+                    { title: "B.B. King - The Thrill Is Gone", url: "https://www.youtube.com/embed/3EKaxfIDv-Q" },
+                    { title: "Muddy Waters - Hoochie Coochie Man", url: "https://www.youtube.com/embed/B_4Wt6fJv_c" },
+                    { title: "Etta James - At Last", url: "https://www.youtube.com/embed/S-cbOl9iBcM" },
+                ]
+            }
+        ];
+
+        const musicFoldersDiv = document.getElementById('music-folders');
+
+        musicData.forEach(categoryData => {
+            const folderButton = document.createElement('button');
+            folderButton.className = 'folder-button';
+            folderButton.textContent = categoryData.category;
+
+            const arrow = document.createElement('span');
+            arrow.className = 'arrow';
+            folderButton.appendChild(arrow);
+
+            const folderContent = document.createElement('div');
+            folderContent.className = 'folder-content';
+
+            categoryData.videos.forEach(video => {
+                const videoContainer = document.createElement('div');
+                videoContainer.className = 'video-container';
+                const iframe = document.createElement('iframe');
+                iframe.src = video.url;
+                iframe.title = video.title;
+                iframe.frameBorder = '0';
+                iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+                iframe.allowFullscreen = true;
+                videoContainer.appendChild(iframe);
+                folderContent.appendChild(videoContainer);
+            });
+
+            musicFoldersDiv.appendChild(folderButton);
+            musicFoldersDiv.appendChild(folderContent);
+
+            folderButton.addEventListener('click', () => {
+                folderButton.classList.toggle('open');
+                folderContent.classList.toggle('open');
+                arrow.classList.toggle('open');
+            });
+        });
+    </script>
+</body>
+</html>
